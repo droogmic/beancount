@@ -820,17 +820,10 @@ class Builder(lexer.LexBuilder):
                 # Fix it and continue.
                 price = Amount(abs(price.number), price.currency)
 
-        # If the price is specified for the entire amount, compute the effective
-        # price here and forget about that detail of the input syntax.
+        # If the price is specified for the entire amount
+        totalprice = None
         if istotal:
-            if units.number == ZERO:
-                number = ZERO
-            else:
-                if __allow_negative_prices__:
-                    number = price.number/units.number
-                else:
-                    number = price.number/abs(units.number)
-            price = Amount(number, price.currency)
+            totalprice, price = price, totalprice
 
         # Note: Allow zero prices because we need them for round-trips for
         # conversion entries.
@@ -851,7 +844,7 @@ class Builder(lexer.LexBuilder):
                             "Cost and price currencies must match: {} != {}".format(
                                 cost.currency, price.currency), None))
 
-        return Posting(account, units, cost, price, chr(flag) if flag else None, meta)
+        return Posting(account, units, cost, price, totalprice, chr(flag) if flag else None, meta)
 
     def tag_link_new(self, _):
         """Create a new TagsLinks instance.

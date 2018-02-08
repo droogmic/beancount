@@ -61,7 +61,7 @@ def has_nontrivial_balance(posting):
     Returns:
       A boolean.
     """
-    return posting.cost or posting.price
+    return posting.cost or posting.price or posting.totalprice
 
 
 def compute_residual(postings):
@@ -181,7 +181,7 @@ def infer_tolerances(postings, options_map, use_cost=None):
                 cost_tolerances[cost_currency] += cost_tolerance
 
             # Compute bounds on the smallest digit of the number implied as cost.
-            price = posting.price
+            price = posting.price or posting.totalprice
             if isinstance(price, Amount) and isinstance(price.number, Decimal):
                 price_currency = price.currency
                 price_tolerance = min(tolerance * price.number, MAXIMUM_TOLERANCE)
@@ -217,8 +217,8 @@ def get_residual_postings(residual, account_rounding):
     """
     meta = {AUTOMATIC_META: True,
             AUTOMATIC_RESIDUAL: True}
-    return [Posting(account_rounding, -position.units, position.cost, None, None,
-                    meta.copy())
+    return [Posting(account_rounding, -position.units, position.cost,
+                    None, None, None, meta.copy())
             for position in residual.get_positions()]
 
 

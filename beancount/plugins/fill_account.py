@@ -49,7 +49,7 @@ def fill_account(entries, unused_options_map, insert_account):
             new_postings = list(entry.postings)
             for pos in inv:
                 new_postings.append(data.Posting(insert_account, -pos.units,
-                                                 None, None, None, None))
+                                                 None, None, None, None, None))
             entry = entry._replace(postings=new_postings)
         new_entries.append(entry)
 

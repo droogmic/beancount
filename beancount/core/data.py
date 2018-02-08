@@ -165,7 +165,6 @@ Balance = new_directive('Balance', [
     ('tolerance', Optional[Decimal]),
     ('diff_amount', Optional[Amount])])
 
-
 # Postings are contained in Transaction entries. These represent the individual
 # legs of a transaction. Note: a posting may only appear within a single entry
 # (multiple transactions may not share a Posting instance), and that's what the
@@ -197,6 +196,7 @@ Posting = NamedTuple('Posting', [
     ('units', Amount),
     ('cost', Optional[Union[Cost, CostSpec]]),
     ('price', Optional[Amount]),
+    ('totalprice', Optional[Amount]),
     ('flag', Optional[Flag]),
     ('meta', Optional[Meta])])
 
@@ -443,7 +443,7 @@ def create_simple_posting(entry, account, number, currency):
         if not isinstance(number, Decimal):
             number = D(number)
         units = Amount(number, currency)
-    posting = Posting(account, units, None, None, None, None)
+    posting = Posting(account, units, None, None, None, None, None)
     if entry is not None:
         entry.postings.append(posting)
     return posting
@@ -473,7 +473,7 @@ def create_simple_posting_with_cost(entry, account,
         cost_number = D(cost_number)
     units = Amount(number, currency)
     cost = Cost(cost_number, cost_currency, None, None)
-    posting = Posting(account, units, cost, None, None, None)
+    posting = Posting(account, units, cost, None, None, None, None)
     if entry is not None:
         entry.postings.append(posting)
     return posting

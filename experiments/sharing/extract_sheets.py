@@ -226,8 +226,8 @@ def create_entry(row: List[str], coltypes: Dict[int,int], inflows_account: str,
                            data.EMPTY_SET,
                            postings)
     units = amount.Amount(number, 'USD')
-    postings.append(data.Posting(account, units, None, None, None, None))
-    postings.append(data.Posting(inflows_account, -units, None, None, None, None))
+    postings.append(data.Posting(account, units, None, None, None, None, None))
+    postings.append(data.Posting(inflows_account, -units, None, None, None, None, None))
     return txn
 
 

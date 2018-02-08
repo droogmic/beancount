@@ -1340,7 +1340,7 @@ class TestTotalsAndSigns(unittest.TestCase):
             Assets:Investments:Cash  -2000.00 USD
         """
         posting = entries[0].postings[0]
-        self.assertEqual(amount.from_string('200 USD'), posting.price)
+        self.assertEqual(amount.from_string('2000 USD'), posting.totalprice)
         self.assertEqual(None, posting.cost)
 
     @parser.parse_doc()
@@ -1351,7 +1351,7 @@ class TestTotalsAndSigns(unittest.TestCase):
             Assets:Investments:Cash  20000.00 USD
         """
         posting = entries[0].postings[0]
-        self.assertEqual(amount.from_string('200 USD'), posting.price)
+        self.assertEqual(amount.from_string('2000 USD'), posting.totalprice)
         self.assertEqual(None, posting.cost)
 
     @parser.parse_doc(expect_errors=True)
@@ -1414,7 +1414,7 @@ class TestAllowNegativePrices(unittest.TestCase):
             Assets:Investments:Cash   20000.00 USD
         """
         posting = entries[0].postings[0]
-        self.assertEqual(amount.from_string('-200 USD'), posting.price)
+        self.assertEqual(amount.from_string('2000 USD'), posting.totalprice)
         self.assertEqual(None, posting.cost)
 
     @parser.parse_doc()
@@ -1425,7 +1425,7 @@ class TestAllowNegativePrices(unittest.TestCase):
             Assets:Investments:Cash  -20000.00 USD
         """
         posting = entries[0].postings[0]
-        self.assertEqual(amount.from_string('-200 USD'), posting.price)
+        self.assertEqual(amount.from_string('-2000 USD'), posting.totalprice)
         self.assertEqual(None, posting.cost)
 
 
@@ -1439,7 +1439,7 @@ class TestBalance(unittest.TestCase):
             Assets:Investments:Cash  -20000 USD
         """
         posting = entries[0].postings[0]
-        self.assertEqual(amount.from_string('200 USD'), posting.price)
+        self.assertEqual(amount.from_string('2000 USD'), posting.totalprice)
         self.assertEqual(None, posting.cost)
 
     @parser.parse_doc()

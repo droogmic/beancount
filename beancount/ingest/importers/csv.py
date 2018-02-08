@@ -268,7 +268,7 @@ class Importer(identifier.IdentifyMixin, filing.FilingMixin):
                     continue
                 units = Amount(amount, self.currency)
                 txn.postings.append(
-                    data.Posting(account, units, None, None, None, None))
+                    data.Posting(account, units, None, None, None, None, None))
 
             # Attach the other posting(s) to the transaction.
             if isinstance(self.categorizer, collections.abc.Callable):

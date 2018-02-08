@@ -235,6 +235,9 @@ class EntryPrinter:
         if posting.price is not None:
             position_str += ' @ {}'.format(posting.price.to_string(self.dformat_max))
 
+        if posting.totalprice is not None:
+            position_str += ' @@ {}'.format(posting.totalprice.to_string(self.dformat_max))
+
         return flag_account, position_str, weight_str
 
     def Posting(self, posting, oss):

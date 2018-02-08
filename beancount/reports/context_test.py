@@ -61,7 +61,7 @@ class TestContext(test_utils.TestCase):
                                                   search_filename, search_lineno)
 
         self.assertLines(textwrap.dedent("""
-        Hash:fa550e3e0c65107d658be07c9cf87356
+        Hash:b792fe05bfd777e7e65885a58813a08e
         Location: <string>:31
 
         ------------ Balances before transaction

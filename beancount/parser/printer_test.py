@@ -77,6 +77,7 @@ class TestEntryPrinter(cmptest.TestCase):
         2014-01-01 open Assets:Account2
         2014-01-01 open Assets:Account3
         2014-01-01 open Assets:Account4
+        2014-01-01 open Assets:Account5
         2014-01-01 open Assets:Cash
 
         2014-06-08 *
@@ -103,9 +104,10 @@ class TestEntryPrinter(cmptest.TestCase):
           Assets:Account1       111.00 BEAN {53.24 USD} @ 55.02 USD
           Assets:Account2       111.00 BEAN {53.24 USD}
           Assets:Account3       111.00 BEAN @ 55.02 USD
-          Assets:Account4       111.00 BEAN
+          Assets:Account4       111.00 BEAN @@ 6107 USD
+          Assets:Account5       111.00 BEAN
           Assets:Cash          -111.00 BEAN
-          Assets:Cash         -17926.5 USD
+          Assets:Cash         -24033.5 USD
 
         2014-06-08 *
           Assets:Account1         111.00 BEAN
@@ -513,7 +515,7 @@ class TestPrinterMisc(test_utils.TestCase):
               Expenses:Gifts                               435 DKK
               Expenses:Entertainment:Travel                340 DKK
               Expenses:Bank:Conversion
-              Assets:Current:Bank:SomeBank            -204.17 BGN @@ 775.00 DKK
+              Assets:Current:Bank:SomeBank            -775.0000000000000000000000001 DKK
         """)
         entries, errors, options_map = loader.load_string(input_string)
         self.assertFalse(errors)

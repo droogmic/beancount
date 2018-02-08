@@ -551,14 +551,14 @@ def internalize(entries, transfer_account,
 
             # Create internal flows posting.
             postings_transfer_int = [
-                data.Posting(transfer_account, pos.units, pos.cost, None, None, None)
+                data.Posting(transfer_account, pos.units, pos.cost, None, None, None, None)
                 for pos in balance_transfer.get_positions()]
             new_entries.append(prototype_entry._replace(
                 postings=(postings_assets + postings_internal + postings_transfer_int)))
 
             # Create external flows posting.
             postings_transfer_ext = [
-                data.Posting(transfer_account, -pos.units, pos.cost, None, None, None)
+                data.Posting(transfer_account, -pos.units, pos.cost, None, None, None, None)
                 for pos in balance_transfer.get_positions()]
             new_entries.append(prototype_entry._replace(
                 postings=(postings_transfer_ext + postings_external)))

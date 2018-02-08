@@ -286,7 +286,7 @@ def categorize_by_currency(entry, balances):
     for index, posting in enumerate(entry.postings):
         units = posting.units
         cost = posting.cost
-        price = posting.price
+        price = posting.price or posting.totalprice
 
         # Extract and override the currencies locally.
         units_currency = (units.currency
@@ -449,6 +449,7 @@ def replace_currencies(postings, refer_groups):
                 replace = False
                 cost = posting.cost
                 price = posting.price
+                totalprice = posting.totalprice
                 if units.currency is MISSING:
                     units = Amount(units.number, refer.units_currency)
                     replace = True
@@ -458,8 +459,11 @@ def replace_currencies(postings, refer_groups):
                 if price and price.currency is MISSING:
                     price = Amount(price.number, refer.price_currency)
                     replace = True
+                if totalprice and totalprice.currency is MISSING:
+                    totalprice = Amount(totalprice.number, refer.price_currency)
+                    replace = True
                 if replace:
-                    posting = posting._replace(units=units, cost=cost, price=price)
+                    posting = posting._replace(units=units, cost=cost, price=price, totalprice=totalprice)
             new_postings.append(posting)
         new_groups.append((currency, new_postings))
     return new_groups
@@ -699,6 +703,7 @@ class MissingType(enum.Enum):
     COST_PER = 2
     COST_TOTAL = 3
     PRICE = 4
+    TOTALPRICE = 5
 
 
 # An error raised if we are not able to interpolate.
@@ -735,6 +740,7 @@ def interpolate_group(postings, balances, currency, tolerances):
         units = posting.units
         cost = posting.cost
         price = posting.price
+        totalprice = posting.totalprice
 
         # Identify incomplete parts of the Posting components.
         if units.number is MISSING:
@@ -758,6 +764,9 @@ def interpolate_group(postings, balances, currency, tolerances):
 
         if price and price.number is MISSING:
             incomplete.append((MissingType.PRICE, index))
+
+        if totalprice and totalprice.number is MISSING:
+            incomplete.append((MissingType.TOTALPRICE, index))
 
     # The replacement posting for the incomplete posting of this group.
     new_posting = None
@@ -828,6 +837,11 @@ def interpolate_group(postings, balances, currency, tolerances):
                     "Internal error; residual currency different than missing currency.")
                 units_number = weight / incomplete_posting.price.number
 
+            elif incomplete_posting.totalprice:
+                assert incomplete_posting.totalprice.currency == weight_currency, (
+                    "Internal error; residual currency different than missing currency.")
+                units_number = incomplete_posting.totalprice.number
+
             else:
                 assert units.currency == weight_currency, (
                     "Internal error; residual currency different than missing currency.")
@@ -885,6 +899,22 @@ def interpolate_group(postings, balances, currency, tolerances):
                 new_price_number = abs(weight / units.number)
                 new_posting = incomplete_posting._replace(price=Amount(new_price_number,
                                                                        price.currency))
+
+        elif missing == MissingType.TOTALPRICE:
+            units = incomplete_posting.units
+            cost = incomplete_posting.cost
+            if cost is not None:
+                errors.append(InterpolationError(
+                    incomplete_posting.meta,
+                    "Cannot infer totalprice for postings with units held at cost", None))
+                return postings, errors, True
+            else:
+                price = incomplete_posting.totalprice
+                assert price.currency == weight_currency, (
+                    "Internal error; residual currency different than missing currency.")
+                new_price_number = units.number
+                new_posting = incomplete_posting._replace(
+                    totalprice=Amount(new_price_number, price.currency))
 
         else:
             assert False, "Internal error; Invalid missing type."

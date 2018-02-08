@@ -191,6 +191,6 @@ def add_postings(entry, amount_, neg_account, pos_account, flag):
       A new, modified entry.
     """
     return entry._replace(postings=entry.postings + [
-        data.Posting(neg_account, -amount_, None, None, flag, None),
-        data.Posting(pos_account, amount_, None, None, flag, None),
+        data.Posting(neg_account, -amount_, None, None, None, flag, None),
+        data.Posting(pos_account, amount_, None, None, None, flag, None),
         ])

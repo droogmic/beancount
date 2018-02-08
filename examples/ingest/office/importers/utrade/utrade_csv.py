@@ -73,8 +73,8 @@ class Importer(importer.ImporterProtocol):
                 assert fees.number == ZERO
                 txn = data.Transaction(
                     meta, date, self.FLAG, None, desc, data.EMPTY_SET, {link}, [
-                        data.Posting(self.account_cash, units, None, None, None, None),
-                        data.Posting(self.account_external, -other, None, None, None, None),
+                        data.Posting(self.account_cash, units, None, None, None, None, None),
+                        data.Posting(self.account_external, -other, None, None, None, None, None),
                     ])
 
             elif rtype == 'DIV':
@@ -90,8 +90,8 @@ class Importer(importer.ImporterProtocol):
 
                 txn = data.Transaction(
                     meta, date, self.FLAG, None, desc, data.EMPTY_SET, {link}, [
-                        data.Posting(self.account_cash, units, None, None, None, None),
-                        data.Posting(account_dividends, -other, None, None, None, None),
+                        data.Posting(self.account_cash, units, None, None, None, None, None),
+                        data.Posting(account_dividends, -other, None, None, None, None, None),
                     ])
 
             elif rtype in ('BUY', 'SELL'):
@@ -114,9 +114,9 @@ class Importer(importer.ImporterProtocol):
                     cost = position.Cost(rate, self.currency, None, None)
                     txn = data.Transaction(
                         meta, date, self.FLAG, None, desc, data.EMPTY_SET, {link}, [
-                            data.Posting(self.account_cash, units, None, None, None, None),
-                            data.Posting(self.account_fees, fees, None, None, None, None),
-                            data.Posting(account_inst, units_inst, cost, None, None, None),
+                            data.Posting(self.account_cash, units, None, None, None, None, None),
+                            data.Posting(self.account_fees, fees, None, None, None, None, None),
+                            data.Posting(account_inst, units_inst, cost, None, None, None, None),
                         ])
 
                 elif rtype == 'SELL':
@@ -134,10 +134,10 @@ class Importer(importer.ImporterProtocol):
                     account_gains = self.account_gains.format(instrument)
                     txn = data.Transaction(
                         meta, date, self.FLAG, None, desc, data.EMPTY_SET, {link}, [
-                            data.Posting(self.account_cash, units, None, None, None, None),
-                            data.Posting(self.account_fees, fees, None, None, None, None),
-                            data.Posting(account_inst, units_inst, cost, price, None, None),
-                            data.Posting(account_gains, None, None, None, None, None),
+                            data.Posting(self.account_cash, units, None, None, None, None, None),
+                            data.Posting(self.account_fees, fees, None, None, None, None, None),
+                            data.Posting(account_inst, units_inst, cost, price, None, None, None),
+                            data.Posting(account_gains, None, None, None, None, None, None),
                         ])
 
             else:

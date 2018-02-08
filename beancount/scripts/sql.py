@@ -74,6 +74,8 @@ def output_transactions(connection, entries):
             cost_label          VARCHAR,
             price_number        DECIMAL(16, 6),
             price_currency      CHARACTER(10),
+            totalprice_number        DECIMAL(16, 6),
+            totalprice_currency      CHARACTER(10),
             FOREIGN KEY(id) REFERENCES entries(id)
           );
         """)
@@ -97,19 +99,23 @@ def output_transactions(connection, entries):
                 units = posting.units
                 cost = posting.cost
                 price = posting.price
+                totalprice = posting.totalprice
+                # raise Exception(f"units.number {units.number} {type(units.number)}")
                 connection.execute("""
-                  INSERT INTO postings VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+                  INSERT INTO postings VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
                 """, (pid, eid,
                       posting.flag,
                       posting.account,
-                      units.number,
+                      float(units.number),
                       units.currency,
-                      cost.number if cost else None,
+                      float(cost.number) if cost else None,
                       cost.currency if cost else None,
                       cost.date if cost else None,
                       cost.label if cost else None,
-                      price.number if price else None,
-                      price.currency if price else None))
+                      float(price.number) if price else None,
+                      price.currency if price else None,
+                      float(totalprice.number) if totalprice else None,
+                      totalprice.currency if totalprice else None))
 
 
 class DirectiveWriter:

@@ -324,9 +324,8 @@ def book_price_conversions(entries, assets_account, income_account):
                     for pos in pnl:
                         meta = data.new_metadata('<book_conversions>', 0)
                         new_postings.append(
-                            data.Posting(income_account,
-                                         -pos.units, None,
-                                         None, None, meta))
+                            data.Posting(income_account, -pos.units, None,
+                                         None, None, None, meta))
 
             # Third, add back all the other unrelated legs in.
             for posting in other:

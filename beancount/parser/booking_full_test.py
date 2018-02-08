@@ -2781,8 +2781,8 @@ class TestBook(unittest.TestCase):
         self.assertPostingsEqual([
             data.Posting('Assets:Account1', A('2 HOOL'),
                          Cost(D('101.00'), 'USD', datetime.date(2015, 10, 1), None),
-                         None, None, None),
-            data.Posting('Assets:Other', A('-204.00 USD'), None, None, None, None),
+                         None, None, None, None),
+            data.Posting('Assets:Other', A('-204.00 USD'), None, None, None, None, None),
             ], postings)
 
     @parser.parse_doc(allow_incomplete=True)
@@ -2803,8 +2803,8 @@ class TestBook(unittest.TestCase):
         self.assertPostingsEqual([
             data.Posting('Assets:Account1', A('2 HOOL'),
                          Cost(D('100.00'), 'CAD', datetime.date(2015, 10, 1), None),
-                         None, None, None),
-            data.Posting('Assets:Other', A('-200.00 CAD'), None, None, None, None),
+                         None, None, None, None),
+            data.Posting('Assets:Other', A('-200.00 CAD'), None, None, None, None, None),
             ], postings)
 
     @parser.parse_doc(allow_incomplete=True)
@@ -2825,8 +2825,8 @@ class TestBook(unittest.TestCase):
         self.assertPostingsEqual([
             data.Posting('Assets:Account1', A('2 HOOL'),
                          Cost(D('100.00'), 'USD', datetime.date(2015, 10, 1), "lot1"),
-                         None, None, None),
-            data.Posting('Assets:Other', A('-200.00 USD'), None, None, None, None),
+                         None, None, None, None),
+            data.Posting('Assets:Other', A('-200.00 USD'), None, None, None, None, None),
             ], postings)
 
     @parser.parse_doc(allow_incomplete=True)
@@ -2861,8 +2861,8 @@ class TestBook(unittest.TestCase):
         self.assertPostingsEqual([
             data.Posting('Assets:Account1', A('-1 HOOL'),
                          Cost(D('100.00'), 'USD', datetime.date(2015, 10, 1), None),
-                         None, None, None),
-            data.Posting('Assets:Other', A('100.00 USD'), None, None, None, None),
+                         None, None, None, None),
+            data.Posting('Assets:Other', A('100.00 USD'), None, None, None, None, None),
             ], postings)
 
     @parser.parse_doc(allow_incomplete=True)
@@ -2882,8 +2882,8 @@ class TestBook(unittest.TestCase):
         self.assertPostingsEqual([
             data.Posting('Assets:Account1', A('-1 HOOL'),
                          Cost(D('100.00'), 'USD', datetime.date(2015, 10, 1), None),
-                         None, None, None),
-            data.Posting('Assets:Other', A('100.00 USD'), None, None, None, None),
+                         None, None, None, None),
+            data.Posting('Assets:Other', A('100.00 USD'), None, None, None, None, None),
             ], postings)
 
     @parser.parse_doc(allow_incomplete=True)
@@ -2903,8 +2903,8 @@ class TestBook(unittest.TestCase):
         self.assertPostingsEqual([
             data.Posting('Assets:Account1', A('-1 HOOL'),
                          Cost(D('100.00'), 'USD', datetime.date(2015, 10, 1), None),
-                         None, None, None),
-            data.Posting('Assets:Other', A('100.00 USD'), None, None, None, None),
+                         None, None, None, None),
+            data.Posting('Assets:Other', A('100.00 USD'), None, None, None, None, None),
             ], postings)
 
     @parser.parse_doc(allow_incomplete=True)
@@ -2924,8 +2924,8 @@ class TestBook(unittest.TestCase):
         self.assertPostingsEqual([
             data.Posting('Assets:Account1', A('-2 HOOL'),
                          Cost(D('100.00'), 'USD', datetime.date(2015, 10, 1), None),
-                         None, None, None),
-            data.Posting('Assets:Other', A('200.00 USD'), None, None, None, None),
+                         None, None, None, None),
+            data.Posting('Assets:Other', A('200.00 USD'), None, None, None, None, None),
             ], postings)
 
     @parser.parse_doc(allow_incomplete=True)
@@ -2945,8 +2945,8 @@ class TestBook(unittest.TestCase):
         self.assertPostingsEqual([
             data.Posting('Assets:Account1', A('-1 HOOL'),
                          Cost(D('100.00'), 'USD', datetime.date(2015, 10, 1), None),
-                         None, None, None),
-            data.Posting('Assets:Other', A('100.00 USD'), None, None, None, None),
+                         None, None, None, None),
+            data.Posting('Assets:Other', A('100.00 USD'), None, None, None, None, None),
             ], postings)
 
     @parser.parse_doc(allow_incomplete=True)
@@ -2966,8 +2966,8 @@ class TestBook(unittest.TestCase):
         self.assertPostingsEqual([
             data.Posting('Assets:Account1', A('-1 HOOL'),
                          Cost(D('100.00'), 'USD', datetime.date(2015, 10, 1), None),
-                         None, None, None),
-            data.Posting('Assets:Other', A('100.00 USD'), None, None, None, None),
+                         None, None, None, None),
+            data.Posting('Assets:Other', A('100.00 USD'), None, None, None, None, None),
             ], postings)
 
     @parser.parse_doc(allow_incomplete=True)
@@ -2989,6 +2989,6 @@ class TestBook(unittest.TestCase):
             data.Posting(
                 'Assets:Account1', A('-1 HOOL'),
                 Cost(D('100.00'), 'USD', datetime.date(2015, 10, 1), "6e425dd7b820"),
-                None, None, None),
-            data.Posting('Assets:Other', A('100.00 USD'), None, None, None, None),
+                None, None, None, None),
+            data.Posting('Assets:Other', A('100.00 USD'), None, None, None, None, None),
             ], postings)

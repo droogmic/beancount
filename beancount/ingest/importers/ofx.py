@@ -290,7 +290,7 @@ def build_transaction(stmttrn, flag, account, currency):
     # the other side.
     number = find_child(stmttrn, 'trnamt', D)
     units = amount.Amount(number, currency)
-    posting = data.Posting(account, units, None, None, None, None)
+    posting = data.Posting(account, units, None, None, None, None, None)
 
     # Build the transaction with a single leg.
     fileloc = data.new_metadata('<build_transaction>', 0)

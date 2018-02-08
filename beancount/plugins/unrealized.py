@@ -146,17 +146,11 @@ def add_unrealized_gains(entries, options_map, subaccount=None):
             data.Posting(
                 asset_account,
                 amount.Amount(pnl, holding.cost_currency),
-                None,
-                None,
-                None,
-                None),
+                None, None, None, None, None),
             data.Posting(
                 income_account,
                 amount.Amount(-pnl, holding.cost_currency),
-                None,
-                None,
-                None,
-                None)
+                None, None, None, None, None),
         ])
 
         new_entries.append(entry)

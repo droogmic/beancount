@@ -225,7 +225,7 @@ class TestPostingConversions(TestPositionConversions):
 
     def _pos(self, units, cost=None, price=None):
         # Create a Posting instance instead of a Position.
-        return data.Posting("Assets:AccountA", units, cost, price, None, None)
+        return data.Posting("Assets:AccountA", units, cost, price, None, None, None)
 
     def test_weight_with_cost_and_price(self):
         self.assertEqual(A("51400.00 USD"), convert.get_weight(

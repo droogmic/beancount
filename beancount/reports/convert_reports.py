@@ -109,10 +109,10 @@ def split_currency_conversions(entry):
         replacement_postings = []
         for posting_orig in postings_at_price:
             weight = convert.get_weight(posting_orig)
-            posting_pos = data.Posting(posting_orig.account, weight, None,
-                                       None, None, None)
-            posting_neg = data.Posting(posting_orig.account, -weight, None,
-                                       None, None, None)
+            posting_pos = data.Posting(posting_orig.account, weight,
+                                       None, None, None, None, None)
+            posting_neg = data.Posting(posting_orig.account, -weight,
+                                       None, None, None, None, None)
 
             currency_entry = entry._replace(
                 postings=[posting_orig, posting_neg],

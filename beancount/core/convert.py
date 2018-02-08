@@ -98,6 +98,13 @@ def get_weight(pos):
                 else:
                     converted_number = price.number * units.number
                 weight = Amount(converted_number, price.currency)
+            totalprice = pos.totalprice
+            if totalprice is not None:
+                if totalprice.number is MISSING or units.number is MISSING:
+                    converted_number = MISSING
+                else:
+                    converted_number = totalprice.number
+                weight = Amount(converted_number, totalprice.currency)
 
     return weight
 

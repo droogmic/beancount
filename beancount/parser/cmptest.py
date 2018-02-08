@@ -124,6 +124,12 @@ def _local_booking(entry):
         elif posting.price:
             posting = posting._replace(
                 price=_transform_incomplete_amount(posting.price))
+        # Fixup totalprice.
+        if posting.totalprice is MISSING:
+            posting = posting._replace(totalprice=None)
+        elif posting.totalprice:
+            posting = posting._replace(
+                totalprice=_transform_incomplete_amount(posting.totalprice))
 
         new_postings.append(posting)
     return entry._replace(postings=new_postings)

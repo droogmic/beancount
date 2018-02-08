@@ -111,8 +111,8 @@ def remove_commissions(entries, unused_options_map, config):
             new_postings = []
             for cposition in commissions:
                 new_postings.extend([
-                    data.Posting(income_account, cposition.units, None, None, None, None),
-                    data.Posting(outgoing_account, -cposition.units, None, None, None, None),
+                    data.Posting(income_account, cposition.units, None, None, None, None, None),
+                    data.Posting(outgoing_account, -cposition.units, None, None, None, None, None),
                     ])
 
                 # Distribute the commission.

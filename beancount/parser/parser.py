@@ -152,7 +152,7 @@ def is_posting_incomplete(posting):
         units.number is MISSING or
         units.currency is MISSING):
         return True
-    price = posting.price
+    price = posting.price or posting.totalprice
     if (price is MISSING or
         price is not None and (price.number is MISSING or
                                price.currency is MISSING)):

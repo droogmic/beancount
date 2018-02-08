@@ -88,6 +88,7 @@ def merge(entries, prototype_txn):
                                Amount(None, posting.units.currency),
                                posting.cost,
                                posting.price,
+                               posting.totalprice,
                                posting.flag,
                                None)
             postings_map[key] += posting.units.number
@@ -111,6 +112,6 @@ def merge(entries, prototype_txn):
         units = Amount(number, posting.units.currency)
         new_entry.postings.append(
             data.Posting(posting.account, units, posting.cost, posting.price,
-                         posting.flag, posting.meta))
+                         posting.totalprice, posting.flag, posting.meta))
 
     return new_entry
