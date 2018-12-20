@@ -46,7 +46,7 @@ class Amount(_Amount):
           number: A string or Decimal instance. Will get converted automatically.
           currency: A string, the currency symbol to use.
         """
-        assert isinstance(number, Amount.valid_types_number), repr(number)
+        assert isinstance(number, Amount.valid_types_number), type(number)
         assert isinstance(currency, Amount.valid_types_currency), repr(currency)
         return _Amount.__new__(cls, number, currency)
 

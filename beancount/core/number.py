@@ -15,7 +15,10 @@ __license__ = "GNU GPLv2"
 import types
 import warnings
 import re
+import locale
 
+# TODO determine if locale restoration needed
+locale.setlocale(locale.LC_ALL, '')
 
 # Note: Python 3.3 is supposed to guarantee a fast "C" decimal implementation,
 # as it comes with its source code. However, in practice, many distributions,
@@ -36,7 +39,7 @@ import re
 #   pip3 install m3-cdecimal
 #
 def is_fast_decimal(decimal_module):
-    "Return true if a fast C decimal implementattion is installed."
+    "Return true if a fast C decimal implementation is installed."
     return isinstance(decimal_module.Decimal().sqrt, types.BuiltinFunctionType)
 
 # Attempt to import a fast C decimal implementation.
@@ -51,7 +54,8 @@ if not is_fast_decimal(decimal):
 
 if not is_fast_decimal(decimal):
     warnings.warn("Fast C decimal implementation appears to be missing; "
-                  "Consider installing cdecimal")
+                  "Consider installing cdecimal; "
+                  "pip3 install m3-cdecimal")
 
 
 # pylint: disable=invalid-name
@@ -70,7 +74,7 @@ class MISSING: pass
 # Regular expression for parsing a number in Python.
 NUMBER_RE = r"[+-]?\s*[0-9,]*(?:\.[0-9]*)?"
 
-_CLEAN_NUMBER_RE = re.compile('[, ]')
+_CLEAN_NUMBER_RE = re.compile("[,' ]")
 
 # pylint: disable=invalid-name
 def D(strord=None):
@@ -91,6 +95,10 @@ def D(strord=None):
         if strord is None or strord == '':
             return Decimal()
         elif isinstance(strord, str):
+            strord = strord.replace(' ', '')
+            # Try using user's locale first
+            if locale.getlocale() != (None, None):
+                return Decimal(locale.delocalize(strord))
             return Decimal(_CLEAN_NUMBER_RE.sub('', strord))
         elif isinstance(strord, Decimal):
             return strord
