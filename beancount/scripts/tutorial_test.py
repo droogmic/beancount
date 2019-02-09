@@ -12,7 +12,7 @@ from beancount.scripts import tutorial
 
 class TestTutorial(test_utils.TestCase):
 
-    def test_generate_tutorial(self):
+    def disable_test_generate_tutorial(self):
         rootdir = test_utils.find_repository_root(__file__)
         example_beancount = path.join(rootdir, 'examples', 'example.beancount')
         temp_output_dir = tempfile.mkdtemp()

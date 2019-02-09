@@ -1,0 +1,20 @@
+syntax: glob
+*.pyc
+*.swp
+*~
+TAGS
+build
+dist
+*.a
+*.so
+.noseids
+examples/generated/*
+beancount/parser/grammar.output
+*.picklecache
+*.DS_Store
+.idea
+beancount.egg-info
+.cache
+.pytest_cache/*
+.venv
+.vscode
