@@ -6,6 +6,8 @@ downloaded files, and for each of those files, extract transactions from it.
 __copyright__ = "Copyright (C) 2016-2017  Martin Blais"
 __license__ = "GNU GPLv2"
 
+import curses
+import io
 import itertools
 import inspect
 import logging
@@ -14,11 +16,15 @@ import textwrap
 import traceback
 
 from beancount.core import data
+from beancount.core import getters
+from beancount.core import flags
 from beancount.parser import printer
 from beancount.ingest import similar
 from beancount.ingest import identify
 from beancount.ingest import scripts_utils
 from beancount.ingest import cache
+from beancount.ingest.interactive.interactive import select_account
+from beancount.ingest.interactive import guesser
 from beancount import loader
 
 
@@ -26,9 +32,10 @@ from beancount import loader
 # You may override this value from your .import script.
 HEADER = ';; -*- mode: beancount -*-\n'
 
-
 # Name of metadata field to be set to indicate that the entry is a likely duplicate.
 DUPLICATE_META = '__duplicate__'
+
+DESCRIPTION = "Extract transactions from downloads"
 
 
 def extract_from_file(filename, importer,
@@ -149,7 +156,6 @@ def extract(importer_config,
             entries=None,
             options_map=None,
             mindate=None,
-            ascending=True,
             detect_duplicates_func=None):
     """Given an importer configuration, search for files that can be imported in the
     list of files or directories, run the signature checks on them, and if it
@@ -166,8 +172,6 @@ def extract(importer_config,
         extracted entries to be merged in.
       options_map: The options parsed from existing file.
       mindate: Optional minimum date to output transactions for.
-      ascending: A boolean, true to print entries in ascending order, false if
-        descending is desired.
       detect_duplicates_func: An optional function which accepts a list of
         lists of imported entries and a list of entries already existing in
         the user's ledger. See function find_duplicate_entries(), which is the
@@ -207,18 +211,50 @@ def extract(importer_config,
     assert all(isinstance(new_entries, tuple) for new_entries in new_entries_list)
     assert all(isinstance(new_entries[0], str) for new_entries in new_entries_list)
     assert all(isinstance(new_entries[1], list) for new_entries in new_entries_list)
-
-    # Print out the results.
-    output.write(HEADER)
-    for key, new_entries in new_entries_list:
-        output.write(identify.SECTION.format(key))
-        output.write('\n')
-        if not ascending:
-            new_entries.reverse()
-        print_extracted_entries(new_entries, output)
+    
+    return new_entries_list
 
 
-DESCRIPTION = "Extract transactions from downloads"
+def interactive(args, new_entries, entries):
+    """Given a list new_entries, interactively prompt
+    the user to complete the account allocation.
+
+    A list of entries for an existing ledger can be provided in order to 
+    pre-populate a predictive algorithm.
+
+    Args:
+      args: Args
+      new_entries: Newly extracted entries to be merged in.
+      entries: A list of directives loaded from the existing file for the newly
+        extracted entries to be merged in.
+    """
+    accounts_dict = getters.get_dict_accounts(
+        account_names=getters.get_accounts(entries))
+
+    ag = guesser.AccountGuess() if args.ag_active else None
+    if args.ag_active and args.train:
+        for txn in data.filter_txns(entries):
+            if txn.flag == flags.FLAG_OKAY:
+                try:
+                    # TODO fix using hardcoding
+                    account = txn.postings[1].account
+                    ag.add_txn(txn, account)
+                except KeyError:
+                    raise
+
+    formatter = logging.Formatter("%(asctime)s:%(levelname)s:%(name)s: %(message)s")
+    with io.StringIO() as curses_log:
+        console_handler = logging.StreamHandler(curses_log)
+        console_handler.setFormatter(formatter)
+        logger = logging.getLogger()
+        logger.setLevel(logging.DEBUG)
+        logger.addHandler(console_handler)
+        try:
+            curses.wrapper(select_account, new_entries, accounts_dict, ag=ag)
+        except IndexError:
+            print(curses_log.getvalue())
+            raise
+        print(curses_log.getvalue())
 
 
 def add_arguments(parser):
@@ -234,6 +270,26 @@ def add_arguments(parser):
                         default=True, const=False,
                         help='Write out the entries in descending order')
 
+    interactive_group = parser.add_argument_group('interactive')
+
+    interactive_group.add_argument(
+        '-i', '--interactive',
+        action='store_true',
+        help='Interactive curses selection'
+    )
+
+    interactive_group.add_argument(
+        '-g', '-s', '--guessing', '--suggestions',
+        action='store_true', dest='ag_active',
+        help='Provide suggestions'
+    )
+
+    interactive_group.add_argument(
+        '-p', '-t', '--prepopulate', '--train',
+        action='store_true', dest='train',
+        help='Train the account guesser using the existing beancount file'
+    )
+
 
 def run(args, _, importers_list, files_or_directories, detect_duplicates_func=None):
     """Run the subcommand."""
@@ -244,12 +300,32 @@ def run(args, _, importers_list, files_or_directories, detect_duplicates_func=No
     else:
         entries, options_map = None, None
 
-    extract(importers_list, files_or_directories, sys.stdout,
+    output = sys.stdout
+
+    new_entries_list = extract(importers_list, files_or_directories,
+            output=output,
             entries=entries,
             options_map=options_map,
             mindate=None,
-            ascending=args.ascending,
             detect_duplicates_func=detect_duplicates_func)
+
+    print(new_entries_list)
+
+    if args.interactive:
+        for key, new_entries in new_entries_list:
+            for e in new_entries:
+                print(type(e))
+            interactive(args, new_entries, entries)
+
+    # Print out the results.
+    output.write(HEADER)
+    for key, new_entries in new_entries_list:
+        output.write(identify.SECTION.format(key))
+        output.write('\n')
+        if not args.ascending:
+            new_entries.reverse()
+        print_extracted_entries(entries=new_entries, file=output)
+    
     return 0
 
 
